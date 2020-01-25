@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:github_finder_rx/services.dart';
+import 'package:github_finder_rx/apiClasses.dart';
 import 'package:github_finder_rx/widgets.dart';
 
 class UserProfilePage extends StatelessWidget {

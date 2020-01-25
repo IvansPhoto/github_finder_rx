@@ -4,10 +4,12 @@ import 'package:github_finder_rx/pages/LoadingScreen.dart';
 import 'package:github_finder_rx/pages/SearchingUsersPage.dart';
 import 'package:github_finder_rx/pages/ResultSearchPage.dart';
 import 'package:github_finder_rx/pages/UserProfilePage.dart';
-import 'services.dart';
+import 'package:github_finder_rx/SetPageTextField.dart';
+import 'package:github_finder_rx/services.dart';
+import 'package:github_finder_rx/pages/SelectedUsers.dart';
 
 void main() {
-	getIt.registerLazySingleton<SearchParameters>(() => SearchParameters(null, 1, 5));
+	getIt.registerLazySingleton<StreamService>(() => StreamService());
 	runApp(MaterialApp(
 		initialRoute: RouteNames.index,
 		routes: {
@@ -16,6 +18,8 @@ void main() {
 			RouteNames.profile: (BuildContext context) => UserProfilePage(),
 			RouteNames.loading: (BuildContext context) => LoadingScreen(),
 			RouteNames.error: (BuildContext context) => ErrorScreen(),
+			RouteNames.setPage: (BuildContext context) => SetPage(),
+			RouteNames.selectedUsers: (BuildContext context) => SelectedUsers(),
 		}, //TODO Set only vertical layout
 		theme: ThemeData(
 			iconTheme: IconThemeData(color: Colors.red[900]),
@@ -52,8 +56,9 @@ void main() {
 				title: TextStyle(fontSize: 20, color: Colors.orange),
 				button: TextStyle(fontSize: 20, color: Colors.orange),
 				body1: TextStyle(fontSize: 20, color: Colors.grey[800]),
-				display1: TextStyle(fontSize: 35, color: Colors.red),
+				display1: TextStyle(fontSize: 20, color: Colors.red),
 				overline: TextStyle(fontSize: 15, color: Colors.red),
+				caption: TextStyle(color: Colors.red),
 			),
 		),
 		darkTheme: ThemeData(
