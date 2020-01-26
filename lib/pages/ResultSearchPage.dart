@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:github_finder_rx/pages/LoadingScreen.dart';
-import 'package:github_finder_rx/pages/SelectedUsers.dart';
+import 'package:github_finder_rx/supportPages/LoadingScreen.dart';
+import 'package:github_finder_rx/pages/ChangePageNumber.dart';
 import 'package:github_finder_rx/services.dart';
 import 'package:github_finder_rx/widgets.dart';
 import 'package:github_finder_rx/apiClasses.dart';
-//import 'package:github_finder_rx/SetPageTextField.dart';
 
 class ResultSearchPage extends StatelessWidget {
   final _streamService = getIt.get<StreamService>();
@@ -19,7 +18,7 @@ class ResultSearchPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.settings),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SelectedPage(), fullscreenDialog: true)),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ChangePageNumber(), fullscreenDialog: true)),
           )
         ],
       ),
@@ -52,8 +51,8 @@ class ResultSearchPage extends StatelessWidget {
                     if (gitHubUsers.length < 1) {
                       return Center(heightFactor: 10, child: Text('No users found', style: TextStyle(fontSize: 45)));
                     } else if (index > gitHubUsers.length - 1) {
-//                      return SearchingButton(context);
-                      return searchingButtonFunction(context: context, streamService: _streamService);
+                      return SearchingButton(context);
+//                      return searchingButtonFunction(context: context, streamService: _streamService);
                     } else {
                       return Card(
                         elevation: 0,
