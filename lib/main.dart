@@ -19,7 +19,7 @@ void main() {
 			RouteNames.loading: (BuildContext context) => LoadingScreen(),
 			RouteNames.error: (BuildContext context) => ErrorScreen(),
 			RouteNames.setPage: (BuildContext context) => SetPage(),
-			RouteNames.selectedUsers: (BuildContext context) => SelectedUsers(),
+			RouteNames.selectedUsers: (BuildContext context) => SelectedPage(),
 		}, //TODO Set only vertical layout
 		theme: ThemeData(
 			iconTheme: IconThemeData(color: Colors.red[900]),

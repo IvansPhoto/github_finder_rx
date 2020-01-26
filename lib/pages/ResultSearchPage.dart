@@ -1,47 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:github_finder_rx/pages/LoadingScreen.dart';
+import 'package:github_finder_rx/pages/SelectedUsers.dart';
 import 'package:github_finder_rx/services.dart';
 import 'package:github_finder_rx/widgets.dart';
 import 'package:github_finder_rx/apiClasses.dart';
+//import 'package:github_finder_rx/SetPageTextField.dart';
 
 class ResultSearchPage extends StatelessWidget {
-  final _searchParameters = getIt.get<StreamService>();
+  final _streamService = getIt.get<StreamService>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('The Users have found'), elevation: 0, centerTitle: true),
+      appBar: AppBar(
+        title: Text('The Users have found'),
+        elevation: 0,
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => SelectedPage(), fullscreenDialog: true)),
+          )
+        ],
+      ),
       body: StreamBuilder(
-          stream: _searchParameters.streamGHUResponse$,
+          stream: _streamService.streamGHUResponse$,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return LoadingScreen();
-            } else if (_searchParameters.currentGHUResponse.headerStatus != '200 OK') {
+            } else if (_streamService.currentGHUResponse.headerStatus != '200 OK') {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(_searchParameters.currentGHUResponse.headerStatus),
+                    Text(_streamService.currentGHUResponse.headerStatus),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
-                      child: Text(
-                        _searchParameters.currentGHUResponse.message,
-                        style: Theme.of(context).textTheme.overline,
-                      ),
+                      child: Text(_streamService.currentGHUResponse.message, style: Theme.of(context).textTheme.overline),
                     ),
-                    Text(_searchParameters.currentGHUResponse.docUrl),
+                    Text(_streamService.currentGHUResponse.docUrl),
                   ],
                 ),
               );
-//              return Center(
-//                child: Text.rich(TextSpan(children: [
-//                  TextSpan(text: _searchParameters.currentGHUResponse.message + '\n'),
-//                  TextSpan(text: _searchParameters.currentGHUResponse.docUrl + '\n'),
-//                  TextSpan(text: _searchParameters.currentGHUResponse.headerStatus),
-//                ])),
-//              );
             } else {
               final List<GitHubUsers> gitHubUsers = snapshot.data.users;
               return ListView.builder(
@@ -50,7 +52,8 @@ class ResultSearchPage extends StatelessWidget {
                     if (gitHubUsers.length < 1) {
                       return Center(heightFactor: 10, child: Text('No users found', style: TextStyle(fontSize: 45)));
                     } else if (index > gitHubUsers.length - 1) {
-                      return SearchingButton(context);
+//                      return SearchingButton(context);
+                      return searchingButtonFunction(context: context, streamService: _streamService);
                     } else {
                       return Card(
                         elevation: 0,
@@ -72,9 +75,7 @@ class ResultSearchPage extends StatelessWidget {
                                 Text('Score: ' + gitHubUsers[index].score.toString()),
                                 RaisedButton(
                                   elevation: 0,
-                                  onPressed: () {
-                                    StreamService.showUserProfileHero(context: context, url: gitHubUsers[index].url);
-                                  },
+                                  onPressed: () => StreamService.showUserProfileHero(context: context, url: gitHubUsers[index].url),
                                   child: Text('View profile'),
                                 ),
                               ],

@@ -34,27 +34,6 @@ class SearchParameters {
 class HttpConnection {}
 
 class StreamService {
-//	String _searchString;
-//	int _page;
-//	int _perPage;
-//	StreamService(this._searchString, this._page, this._perPage);
-//
-//	void increasePage() => _page++;
-//	void decreasePage() => _page--;
-//
-//	set setString(String newSearchString) => _searchString = newSearchString;
-//	set setPage(int newPage) => _page = newPage;
-//	set setPerPage(int newPerPage) => _perPage = newPerPage;
-//
-//	String get searchString => _searchString;
-//	int get getPage => _page;
-//	int get getPerPage => _perPage;
-//
-//	final _searchPageParams = BehaviorSubject<StreamService>();
-//	Stream get streamSearchParams$ => _searchPageParams.stream;
-//	StreamService get currentSearchParams => _searchPageParams.value;
-//	set setSearchParams(StreamService currentSearchParams) => _searchPageParams.add(currentSearchParams);
-
   final _searchParameters = BehaviorSubject.seeded(SearchParameters(pageNumber: 1, resultPerPage: 5));
   Stream get streamSearch => _searchParameters.stream;
   SearchParameters get currentSearch => _searchParameters.value;
