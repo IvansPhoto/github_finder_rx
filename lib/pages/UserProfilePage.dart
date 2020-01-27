@@ -94,6 +94,25 @@ class UserProfilePage extends StatelessWidget {
 
 class UserProfilePageFutureBuilder extends StatelessWidget {
 
+  Widget _listViewHorizontal(BuildContext context, String propertyName, String dataProperty) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          height: 25,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              Text(propertyName + ': ', style: Theme.of(context).textTheme.display1),
+              Text(dataProperty),
+            ],
+          ),
+        ),
+        Container(height: 1, color: Colors.grey, margin: EdgeInsets.symmetric(vertical: 6)),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Map theUserProfile = ModalRoute.of(context).settings.arguments;
@@ -110,15 +129,18 @@ class UserProfilePageFutureBuilder extends StatelessWidget {
                   tag: theUserProfile['avatarUrl'],
                   child: ImageUrlIndicator(url: theUserProfile['avatarUrl']),
                 ),
+                Container(height: 6),
                 FutureBuilder(
                   future: get(theUserProfile['url']),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    List<Widget> children;
+
+                    List<Widget> children = [];
 
                     if (snapshot.hasData) {
-                      children = <Widget>[
-                        Text('Result: ${jsonDecode(snapshot.data.body)}')
-                      ];
+                      final Map<String, dynamic> userData = jsonDecode(snapshot.data.body);
+                      userData.forEach((String key, value) {
+                        children.add(_listViewHorizontal(context, key, value.toString()));
+                      });
                     } else if (snapshot.hasError) {
                       children = <Widget>[
                         Icon(Icons.error_outline, color: Colors.red, size: 60),
@@ -127,16 +149,15 @@ class UserProfilePageFutureBuilder extends StatelessWidget {
                     } else {
                       children = <Widget>[
                         CircularProgressIndicator(),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 16),
-                          child: Text('Awaiting result...'),
-                        )
+                        Text('Awaiting server response...')
                       ];
                     }
+
                     return Center(
                       child: Column(
+                        mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: children,
                       ),
                     );
