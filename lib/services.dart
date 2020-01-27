@@ -67,3 +67,14 @@ class StreamService {
     }
   }
 }
+
+void getUserProfile({BuildContext context, String url}) async {
+  try {
+    Response response = await get(url);
+    UserProfile userProfile = UserProfile.fromJson(jsonDecode(response.body));
+    Navigator.pushNamed(context, RouteNames.profile, arguments: userProfile);
+  } catch (error) {
+    print(error);
+    Navigator.pushNamed(context, RouteNames.error, arguments: error); ////Check error type.
+  }
+}

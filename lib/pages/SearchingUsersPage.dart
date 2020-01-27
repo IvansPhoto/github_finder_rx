@@ -3,14 +3,32 @@ import 'package:flutter/services.dart';
 import 'package:github_finder_rx/widgets.dart';
 import 'package:github_finder_rx/services.dart';
 
-class SearchingUsersPage extends StatelessWidget {
+class SearchingUsersPage extends StatefulWidget {
+  @override
+  _SearchingUsersPageState createState() => _SearchingUsersPageState();
+}
+
+class _SearchingUsersPageState extends State<SearchingUsersPage> {
   final _streamService = getIt.get<StreamService>();
   final _formKey = GlobalKey<FormState>();
 
+  TextEditingController _userNameKey;
+  TextEditingController _perPageKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _userNameKey = TextEditingController();
+    _perPageKey = TextEditingController(text: _streamService.currentSearch.resultPerPage.toString());
+  }
+  @override
+  void dispose() {
+    super.dispose();
+    _userNameKey.dispose();
+    _perPageKey.dispose();
+  }
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _userNameKey = TextEditingController();
-    final TextEditingController _perPageKey = TextEditingController(text: _streamService.currentSearch.resultPerPage.toString());
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(title: Text('Index Page'), elevation: 0, centerTitle: true),

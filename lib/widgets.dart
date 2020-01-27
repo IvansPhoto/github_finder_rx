@@ -65,8 +65,12 @@ class SearchingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int _theLastPageNumber = (_streamService.currentGHUResponse.totalCount / _streamService.currentSearch.resultPerPage).ceil();
-    final int _apiMaxPage = (1000 ~/ _streamService.currentSearch.resultPerPage).ceil();
+    final _pageNumber = _streamService.currentSearch.pageNumber;
+    final _resultPerPage = _streamService.currentSearch.resultPerPage;
+    final _totalCount = _streamService.currentGHUResponse.totalCount;
+    final int _theLastPageNumber = (_totalCount / _resultPerPage).ceil();
+    final int _apiMaxPage = (1000 ~/ _resultPerPage).ceil();
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -74,7 +78,7 @@ class SearchingButton extends StatelessWidget {
       children: <Widget>[
         IconButton(
           icon: Icon(Icons.navigate_before, size: 35),
-          onPressed: _streamService.currentSearch.pageNumber != 1
+          onPressed: _pageNumber != 1
               ? () {
                   _streamService.currentSearch.decreasePage();
                   _streamService.searchUsers(streamService: _streamService, context: context);
@@ -85,15 +89,15 @@ class SearchingButton extends StatelessWidget {
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ChangePageNumber(), fullscreenDialog: true));
           },
-          child: Text('${_streamService.currentSearch.pageNumber} / ${_theLastPageNumber > _apiMaxPage ? _apiMaxPage : _theLastPageNumber}'),
+          child: Text('$_pageNumber / ${_theLastPageNumber > _apiMaxPage ? _apiMaxPage : _theLastPageNumber}'),
         ),
         IconButton(
           icon: Icon(
             Icons.navigate_next,
             size: 35,
           ),
-          onPressed: ((_streamService.currentGHUResponse.totalCount / _streamService.currentSearch.resultPerPage) != _streamService.currentSearch.pageNumber &&
-                  _streamService.currentSearch.pageNumber < (1000 / _streamService.currentSearch.resultPerPage))
+          onPressed: ((_totalCount / _resultPerPage) != _pageNumber &&
+                  _pageNumber < (1000 / _resultPerPage))
               ? () {
                   _streamService.currentSearch.increasePage();
                   _streamService.searchUsers(streamService: _streamService, context: context);

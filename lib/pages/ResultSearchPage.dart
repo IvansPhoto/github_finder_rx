@@ -52,7 +52,6 @@ class ResultSearchPage extends StatelessWidget {
                       return Center(heightFactor: 10, child: Text('No users found', style: TextStyle(fontSize: 45)));
                     } else if (index > gitHubUsers.length - 1) {
                       return SearchingButton(context);
-//                      return searchingButtonFunction(context: context, streamService: _streamService);
                     } else {
                       return Card(
                         elevation: 0,
@@ -74,7 +73,9 @@ class ResultSearchPage extends StatelessWidget {
                                 Text('Score: ' + gitHubUsers[index].score.toString()),
                                 RaisedButton(
                                   elevation: 0,
-                                  onPressed: () => StreamService.showUserProfileHero(context: context, url: gitHubUsers[index].url),
+//                                  onPressed: () => StreamService.showUserProfileHero(context: context, url: gitHubUsers[index].url),
+                                  onPressed: () => Navigator.pushNamed(context, RouteNames.profile,
+                                      arguments: {'url': gitHubUsers[index].url, 'avatarUrl': gitHubUsers[index].avatarUrl, 'login': gitHubUsers[index].login}),
                                   child: Text('View profile'),
                                 ),
                               ],
@@ -89,62 +90,3 @@ class ResultSearchPage extends StatelessWidget {
     );
   }
 }
-
-//class SearchUsersResultPageInStream extends StatelessWidget {
-//	final _searchParameters = getIt.get<SearchParameters>();
-//
-//	@override
-//	Widget build(BuildContext context) {
-//		return Scaffold(
-//			appBar: AppBar(title: Text('The Users have found'), elevation: 0, centerTitle: true),
-//			body: StreamBuilder(
-//					stream: _searchParameters.streamGHUResponse$,
-//					builder: (BuildContext context, AsyncSnapshot snapshot) {
-//						if (!snapshot.hasData) {
-//							return LoadingScreen();
-//						} else {
-//							final List<GitHubUsers> gitHubUsers = snapshot.data.users;
-//							return Column(
-//								children: <Widget>[
-//									SearchingButton(),
-//									Expanded(
-//										child: ListView.builder(
-//												itemCount: gitHubUsers.length + 1,
-//												itemBuilder: (BuildContext context, int index) {
-//													if (index > gitHubUsers.length - 1) {
-//														return SearchingButton();
-//													} else {
-//														return Card(
-//															elevation: 0,
-//															child: Row(
-//																children: <Widget>[
-//																	ImageUrlIndicator(url: gitHubUsers[index].avatarUrl),
-//																	Container(width: 10),
-//																	Column(
-//																		crossAxisAlignment: CrossAxisAlignment.start,
-//																		children: <Widget>[
-//																			Text('Login: ' + gitHubUsers[index].login),
-//																			Text('Score: ' + gitHubUsers[index].score.toString()),
-//																			FlatButton(
-//																				onPressed: () {
-//																					SearchParameters.getUserProfile(context: context, url: gitHubUsers[index].url);
-//																				},
-//																				child: Text('View profile'),
-//																				color: Theme.of(context).primaryColor,
-//																			)
-//																		],
-//																	),
-//																],
-//															),
-//														);
-//													}
-//												}),
-//									),
-//								],
-//							);
-//						}
-//					}),
-//		);
-//		;
-//	}
-//}

@@ -15,7 +15,7 @@ void main() {
     routes: {
       RouteNames.index: (BuildContext context) => SearchingUsersPage(),
       RouteNames.users: (BuildContext context) => ResultSearchPage(),
-      RouteNames.profile: (BuildContext context) => UserProfilePage(),
+      RouteNames.profile: (BuildContext context) => UserProfilePageFutureBuilder(),
       RouteNames.loading: (BuildContext context) => LoadingScreen(),
       RouteNames.error: (BuildContext context) => ErrorScreen(),
       RouteNames.setPage: (BuildContext context) => ChangePageNumber(),

@@ -2,22 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:github_finder_rx/services.dart';
 
-class ChangePageNumber extends StatelessWidget {
+class ChangePageNumber extends StatefulWidget {
+  @override
+  _ChangePageNumberState createState() => _ChangePageNumberState();
+}
+
+class _ChangePageNumberState extends State<ChangePageNumber> {
   final _formKey = GlobalKey<FormState>();
   final _streamService = getIt.get<StreamService>();
 
+  TextEditingController _pageNumberKey;
+  int _pageNumber;
+  int _totalCount;
+  int _resultPerPage;
+  int _theLastPageNumber;
+  int _apiMaxPage;
+  int _currentPge;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageNumberKey = TextEditingController(text: _streamService.currentSearch.pageNumber.toString());
+    _pageNumber = _streamService.currentSearch.pageNumber;
+    _totalCount = _streamService.currentGHUResponse.totalCount;
+    _resultPerPage = _streamService.currentSearch.resultPerPage;
+    _theLastPageNumber = (_totalCount / _resultPerPage).ceil();
+    _apiMaxPage = (1000 ~/ _resultPerPage).ceil();
+    _currentPge = _pageNumber;
+  }
+
+  @override
+  void dispose() {
+    _pageNumberKey.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _pageNumberKey = TextEditingController(text: _streamService.currentSearch.pageNumber.toString());
-
-    final _pageNumber = _streamService.currentSearch.pageNumber;
-    final _totalCount = _streamService.currentGHUResponse.totalCount;
-    final _resultPerPage = _streamService.currentSearch.resultPerPage;
-
-    final int _theLastPageNumber = (_totalCount / _resultPerPage).ceil();
-    final int _apiMaxPage = (1000 ~/ _resultPerPage).ceil();
-    final int _currentPge = _pageNumber;
-
     return Scaffold(
       appBar: AppBar(title: Text('Select the page number.'), elevation: 0, centerTitle: true),
       body: Center(
@@ -28,11 +49,11 @@ class ChangePageNumber extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 15),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   //Container call an error which obstruct save information in the Field.
-//                  Container(height: MediaQuery.of(context).size.height / 6),
+                  Container(height: MediaQuery.of(context).size.height / 6),
                   Text('You have ${_streamService.currentGHUResponse.totalCount.toString()} matches.'),
                   _totalCount > 1000
                       ? Padding(
