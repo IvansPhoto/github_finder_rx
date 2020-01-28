@@ -48,12 +48,14 @@ class _SearchingUsersPageState extends State<SearchingUsersPage> {
                   TextFormField(
                     keyboardType: TextInputType.text,
                     controller: _userNameKey,
+                    maxLength: 25,
                     decoration: const InputDecoration(hintText: 'Input a user name'),
                     validator: (value) => value.isEmpty ? 'Enter a user name here.' : null,
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     controller: _perPageKey,
+                    maxLength: 3,
                     decoration: const InputDecoration(hintText: 'Show matches per one page'),
                     inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
                     validator: (data) {

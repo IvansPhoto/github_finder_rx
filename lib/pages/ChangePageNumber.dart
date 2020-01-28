@@ -67,6 +67,7 @@ class _ChangePageNumberState extends State<ChangePageNumber> {
                     keyboardType: TextInputType.number,
                     controller: _pageNumberKey,
                     textAlign: TextAlign.center,
+                    maxLength: 3,
                     inputFormatters: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
                     decoration: const InputDecoration(hintText: 'Input the page number.'),
                     validator: (data) {
