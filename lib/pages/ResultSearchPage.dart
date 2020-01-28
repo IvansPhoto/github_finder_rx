@@ -73,7 +73,6 @@ class ResultSearchPage extends StatelessWidget {
                                 Text('Score: ' + gitHubUsers[index].score.toString()),
                                 RaisedButton(
                                   elevation: 0,
-//                                  onPressed: () => StreamService.showUserProfileHero(context: context, url: gitHubUsers[index].url),
                                   onPressed: () => Navigator.pushNamed(context, RouteNames.profile,
                                       arguments: {'url': gitHubUsers[index].url, 'avatarUrl': gitHubUsers[index].avatarUrl, 'login': gitHubUsers[index].login}),
                                   child: Text('View profile'),

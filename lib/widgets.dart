@@ -81,7 +81,7 @@ class SearchingButton extends StatelessWidget {
           onPressed: _pageNumber != 1
               ? () {
                   _streamService.currentSearch.decreasePage();
-                  _streamService.searchUsers(streamService: _streamService, context: context);
+                  ApiRequests.searchUsers(streamService: _streamService, context: context);
                 }
               : null,
         ),
@@ -100,7 +100,7 @@ class SearchingButton extends StatelessWidget {
                   _pageNumber < (1000 / _resultPerPage))
               ? () {
                   _streamService.currentSearch.increasePage();
-                  _streamService.searchUsers(streamService: _streamService, context: context);
+                  ApiRequests.searchUsers(streamService: _streamService, context: context);
                 }
               : null,
         ),

@@ -77,7 +77,7 @@ class _SearchingUsersPageState extends State<SearchingUsersPage> {
                           _streamService.currentSearch.searchString = _userNameKey.text; //Set search string to object.
                           _streamService.currentSearch.resultPerPage = int.parse(_perPageKey.text);
                           _streamService.currentSearch.pageNumber = 1;
-                          _streamService.searchUsers(context: context, streamService: _streamService);
+                          ApiRequests.searchUsers(context: context, streamService: _streamService);
                           Navigator.pushNamed(context, RouteNames.users);
                         } else {
                           return null;

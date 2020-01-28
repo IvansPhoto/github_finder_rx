@@ -43,38 +43,31 @@ class StreamService {
   Stream get streamGHUResponse$ => _gitHubUserResponse.stream;
   GitHubUserResponse get currentGHUResponse => _gitHubUserResponse.value;
   set setGHUResponse(GitHubUserResponse gitHubUserResponse) => _gitHubUserResponse.add(gitHubUserResponse);
+}
 
-  void searchUsers({@required BuildContext context, StreamService streamService}) async {
-    setGHUResponse = null; //Set to null to make 'snapshot.hasData = false' in the page of search result.
+abstract class ApiRequests {
+  static void searchUsers({@required BuildContext context, @required StreamService streamService}) async {
+    streamService.setGHUResponse = null; //Set to null to make 'snapshot.hasData = false' in the page of search result.
     try {
-      Response response = await get('https://api.github.com/search/users?q=${currentSearch.searchString}&per_page=${currentSearch.resultPerPage}&page=${currentSearch.pageNumber}');
-      print('https://api.github.com/search/users?q=${currentSearch.searchString}&per_page=${currentSearch.resultPerPage}&page=${currentSearch.pageNumber}');
-      setGHUResponse = GitHubUserResponse.fromJson(jsonDecode(response.body), response.headers['status']);
+      Response response = await get(
+          'https://api.github.com/search/users?q=${streamService.currentSearch.searchString}&per_page=${streamService.currentSearch.resultPerPage}&page=${streamService.currentSearch.pageNumber}');
+      print(
+          'https://api.github.com/search/users?q=${streamService.currentSearch.searchString}&per_page=${streamService.currentSearch.resultPerPage}&page=${streamService.currentSearch.pageNumber}');
+      streamService.setGHUResponse = GitHubUserResponse.fromJson(jsonDecode(response.body), response.headers['status']);
     } catch (error) {
       Navigator.pushNamed(context, RouteNames.error, arguments: error); //Check error type.
       print('The error: ' + error);
     }
   }
-
-  static void showUserProfileHero({BuildContext context, String url}) async {
-    try {
-      Response response = await get(url);
-      UserProfile userProfile = UserProfile.fromJson(jsonDecode(response.body));
-      Navigator.pushNamed(context, RouteNames.profile, arguments: userProfile);
-    } catch (error) {
-      print(error);
-      Navigator.pushNamed(context, RouteNames.error, arguments: error); ////Check error type.
-    }
-  }
 }
 
-void getUserProfile({BuildContext context, String url}) async {
-  try {
-    Response response = await get(url);
-    UserProfile userProfile = UserProfile.fromJson(jsonDecode(response.body));
-    Navigator.pushNamed(context, RouteNames.profile, arguments: userProfile);
-  } catch (error) {
-    print(error);
-    Navigator.pushNamed(context, RouteNames.error, arguments: error); ////Check error type.
-  }
-}
+//void getUserProfile({BuildContext context, String url}) async {
+//  try {
+//    Response response = await get(url);
+//    UserProfile userProfile = UserProfile.fromJson(jsonDecode(response.body));
+//    Navigator.pushNamed(context, RouteNames.profile, arguments: userProfile);
+//  } catch (error) {
+//    print(error);
+//    Navigator.pushNamed(context, RouteNames.error, arguments: error); ////Check error type.
+//  }
+//}

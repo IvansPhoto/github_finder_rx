@@ -52,9 +52,8 @@ class _ChangePageNumberState extends State<ChangePageNumber> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  //Container call an error which obstruct save information in the Field.
                   Container(height: MediaQuery.of(context).size.height / 6),
-                  Text('You have ${_streamService.currentGHUResponse.totalCount.toString()} matches.'),
+                  Text('You have ${_totalCount.toString()} matches.'),
                   _totalCount > 1000
                       ? Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
@@ -84,8 +83,7 @@ class _ChangePageNumberState extends State<ChangePageNumber> {
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           _streamService.currentSearch.pageNumber = int.tryParse(_pageNumberKey.text);
-                          _streamService.searchUsers(context: context, streamService: _streamService);
-                          print(int.tryParse(_pageNumberKey.text));
+                          ApiRequests.searchUsers(context: context, streamService: _streamService);
                           Navigator.pop(context);
                         } else
                           return null;
