@@ -51,7 +51,7 @@ class ResultSearchPage extends StatelessWidget {
                     if (gitHubUsers.length < 1) {
                       return Center(heightFactor: 10, child: Text('No users found', style: TextStyle(fontSize: 45)));
                     } else if (index > gitHubUsers.length - 1) {
-                      return SearchingButton(context);
+                      return SearchingButton();
                     } else {
                       return Card(
                         elevation: 0,
@@ -86,6 +86,57 @@ class ResultSearchPage extends StatelessWidget {
                   });
             }
           }),
+    );
+  }
+}
+
+class SearchingButton extends StatelessWidget {
+//  SearchingButton(BuildContext context);
+
+  final _streamService = getIt.get<StreamService>();
+
+  @override
+  Widget build(BuildContext context) {
+    final _pageNumber = _streamService.currentSearch.pageNumber;
+    final _resultPerPage = _streamService.currentSearch.resultPerPage;
+    final _totalCount = _streamService.currentGHUResponse.totalCount;
+    final int _theLastPageNumber = (_totalCount / _resultPerPage).ceil();
+    final int _apiMaxPage = (1000 ~/ _resultPerPage).ceil();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(Icons.navigate_before, size: 35),
+          onPressed: _pageNumber != 1
+              ? () {
+            _streamService.currentSearch.decreasePage();
+            ApiRequests.searchUsers(streamService: _streamService, context: context);
+          }
+              : null,
+        ),
+        FlatButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ChangePageNumber(), fullscreenDialog: true));
+          },
+          child: Text('$_pageNumber / ${_theLastPageNumber > _apiMaxPage ? _apiMaxPage : _theLastPageNumber}'),
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.navigate_next,
+            size: 35,
+          ),
+          onPressed: ((_totalCount / _resultPerPage) != _pageNumber &&
+              _pageNumber < (1000 / _resultPerPage))
+              ? () {
+            _streamService.currentSearch.increasePage();
+            ApiRequests.searchUsers(streamService: _streamService, context: context);
+          }
+              : null,
+        ),
+      ],
     );
   }
 }

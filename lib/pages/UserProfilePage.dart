@@ -93,25 +93,7 @@ class UserProfilePage extends StatelessWidget {
 }
 
 class UserProfilePageFutureBuilder extends StatelessWidget {
-
-  Widget _listViewHorizontal(BuildContext context, String propertyName, String dataProperty) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Container(
-          height: 25,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              Text(propertyName + ': ', style: Theme.of(context).textTheme.display1),
-              Text(dataProperty),
-            ],
-          ),
-        ),
-        Container(height: 1, color: Colors.grey, margin: EdgeInsets.symmetric(vertical: 6)),
-      ],
-    );
-  }
+  final double _padding = 15.0;
 
   @override
   Widget build(BuildContext context) {
@@ -119,27 +101,30 @@ class UserProfilePageFutureBuilder extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(elevation: 0, title: Text('The profile of ${theUserProfile['login']}'), centerTitle: true),
       body: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: EdgeInsets.symmetric(horizontal: _padding),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Hero(
-                  tag: theUserProfile['avatarUrl'],
-                  child: ImageUrlIndicator(url: theUserProfile['avatarUrl']),
+                Container(height: 6),
+                Container(
+                  height: MediaQuery.of(context).size.width - _padding * 2,
+                  child: Hero(
+                    tag: theUserProfile['avatarUrl'],
+                    child: ImageUrlIndicator(url: theUserProfile['avatarUrl']),
+                  ),
                 ),
                 Container(height: 6),
                 FutureBuilder(
                   future: get(theUserProfile['url']),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
-
                     List<Widget> children = [];
 
                     if (snapshot.hasData) {
                       final Map<String, dynamic> userData = jsonDecode(snapshot.data.body);
                       userData.forEach((String key, value) {
-                        children.add(_listViewHorizontal(context, key, value.toString()));
+                        children.add(ListViewHorizontal(propertyName: key, propertyValue: value));
                       });
                     } else if (snapshot.hasError) {
                       children = <Widget>[
@@ -148,8 +133,10 @@ class UserProfilePageFutureBuilder extends StatelessWidget {
                       ];
                     } else {
                       children = <Widget>[
-                        CircularProgressIndicator(),
-                        Text('Awaiting server response...')
+                        Container(
+                          height: MediaQuery.of(context).size.width - _padding * 4,
+                          child: Center(child: Text('Awaiting server response...')),
+                        )
                       ];
                     }
 
@@ -167,6 +154,32 @@ class UserProfilePageFutureBuilder extends StatelessWidget {
               ],
             ),
           )),
+    );
+  }
+}
+
+class ListViewHorizontal extends StatelessWidget {
+  final String propertyName;
+  final propertyValue;
+  ListViewHorizontal({this.propertyName, this.propertyValue});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          height: 25,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              Text(propertyName + ': ', style: Theme.of(context).textTheme.display1),
+              Text(propertyValue.toString()),
+            ],
+          ),
+        ),
+        Container(height: 1, color: Colors.grey, margin: EdgeInsets.symmetric(vertical: 6)),
+      ],
     );
   }
 }
