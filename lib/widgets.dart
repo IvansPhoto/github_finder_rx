@@ -46,6 +46,19 @@ class ImageUrlIndicator extends StatelessWidget {
       height: height,
       width: width,
       loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+
+        Iterable<Widget> _onLoadingProgress(BuildContext context, Widget child, ImageChunkEvent loadingProgress) sync* {
+          if (loadingProgress == null) yield Text('Loading');
+          if (loadingProgress != null) yield Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes : null,
+            ),
+          );
+          if (loadingProgress == null) yield child;
+        }
+
+        print(loadingProgress);
+
         if (loadingProgress == null) return child;
         return Center(
           child: CircularProgressIndicator(

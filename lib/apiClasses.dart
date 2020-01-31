@@ -6,7 +6,7 @@ class GitHubUserResponse {
 	String message;
 	String docUrl;
 
-//	GitHubUserResponse({this.totalCount, this.incompleteResults, this.users});
+	GitHubUserResponse({this.totalCount, this.incompleteResults, this.users});
 
 	GitHubUserResponse.fromJson(Map<String, dynamic> json, String headerStatus) {
 		this.headerStatus = headerStatus;

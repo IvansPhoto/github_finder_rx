@@ -124,7 +124,7 @@ class UserProfilePageFutureBuilder extends StatelessWidget {
                     if (snapshot.hasData) {
                       final Map<String, dynamic> userData = jsonDecode(snapshot.data.body);
                       userData.forEach((String key, value) {
-                        children.add(ListViewHorizontal(propertyName: key, propertyValue: value));
+                        if (value != null && value !='') return children.add(ListViewHorizontal(propertyName: key, propertyValue: value));
                       });
                     } else if (snapshot.hasError) {
                       children = <Widget>[
