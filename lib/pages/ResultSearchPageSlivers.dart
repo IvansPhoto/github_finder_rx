@@ -43,9 +43,13 @@ class ResultSearchPageSlivers extends StatelessWidget {
               else if (_streamService.currentGHUResponse.headerStatus != '200 OK')
                 return _ApiError(_streamService.currentGHUResponse);
               else
-                return !_widgetTypes.usersGridInsteadList ? _GridViewUsers(snapshot.data.users) : _ListViewUsers(snapshot.data.users);
+                switch (_widgetTypes.usersGridInsteadList) {
+                case 0:
+                  return _GridViewUsers(snapshot.data.users);
+                case 1:
+                  return _ListViewUsers(snapshot.data.users);
+              };
             }),
-//        _SearchingButton(),
       ],
     );
   }

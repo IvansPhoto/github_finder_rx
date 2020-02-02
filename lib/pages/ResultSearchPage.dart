@@ -32,11 +32,12 @@ class ResultSearchPage extends StatelessWidget {
             else if (_streamService.currentGHUResponse.headerStatus != '200 OK')
               return _ApiError(_streamService.currentGHUResponse);
             else {
-              final List<GitHubUsers> gitHubUsers = snapshot.data.users;
-              if (!_widgetTypes.usersGridInsteadList)
-                return _GridViewUsers(gitHubUsers);
-              else
-                return _ListViewUsers(gitHubUsers);
+              switch (_widgetTypes.usersGridInsteadList) {
+                case 0:
+                  return _ListViewUsers(snapshot.data.users);
+                case 1:
+                  return _GridViewUsers(snapshot.data.users);
+              }
             }
           }),
     );
@@ -57,6 +58,7 @@ class _ListViewUsers extends StatelessWidget {
           } else if (index > gitHubUsers.length - 1) {
             return _SearchingButton();
           } else {
+            //TODO Replace with ListTile https://api.flutter.dev/flutter/material/ListTile-class.html
             return Card(
               elevation: 0,
               child: Row(

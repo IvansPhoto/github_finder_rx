@@ -44,12 +44,9 @@ class StreamService {
 }
 
 class WidgetTypes {
-  bool usersGridInsteadList;
+  int usersGridInsteadList;
   bool imageType;
-  WidgetTypes({this.imageType = false, this.usersGridInsteadList = false});
-
-  void inverseImageType() => imageType = !imageType;
-  void inverseUserView() => usersGridInsteadList = !usersGridInsteadList;
+  WidgetTypes({this.imageType = false, this.usersGridInsteadList = 0});
 }
 
 abstract class ApiRequests {

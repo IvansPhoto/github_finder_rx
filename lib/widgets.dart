@@ -43,7 +43,7 @@ class ImageUrlIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  if(!_widgetTypes.imageType)
+  if(_widgetTypes.imageType)
     return Image.network(
       url,
       height: height,
