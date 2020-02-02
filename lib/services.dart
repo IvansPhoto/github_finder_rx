@@ -31,11 +31,9 @@ class SearchParameters {
   void decreasePage() => pageNumber--;
 }
 
-class HttpConnection {}
-
 class StreamService {
   final _searchParameters = BehaviorSubject.seeded(SearchParameters(pageNumber: 1, resultPerPage: 5));
-  Stream get streamSearch => _searchParameters.stream;
+  Stream get streamSearch$ => _searchParameters.stream;
   SearchParameters get currentSearch => _searchParameters.value;
   set setSearch(currentSearch) => _searchParameters.add(currentSearch);
 
@@ -43,6 +41,15 @@ class StreamService {
   Stream get streamGHUResponse$ => _gitHubUserResponse.stream;
   GitHubUserResponse get currentGHUResponse => _gitHubUserResponse.value;
   set setGHUResponse(GitHubUserResponse gitHubUserResponse) => _gitHubUserResponse.add(gitHubUserResponse);
+}
+
+class WidgetTypes {
+  bool usersGridInsteadList;
+  bool imageType;
+  WidgetTypes({this.imageType = false, this.usersGridInsteadList = false});
+
+  void inverseImageType() => imageType = !imageType;
+  void inverseUserView() => usersGridInsteadList = !usersGridInsteadList;
 }
 
 abstract class ApiRequests {
@@ -60,14 +67,3 @@ abstract class ApiRequests {
     }
   }
 }
-
-//void getUserProfile({BuildContext context, String url}) async {
-//  try {
-//    Response response = await get(url);
-//    UserProfile userProfile = UserProfile.fromJson(jsonDecode(response.body));
-//    Navigator.pushNamed(context, RouteNames.profile, arguments: userProfile);
-//  } catch (error) {
-//    print(error);
-//    Navigator.pushNamed(context, RouteNames.error, arguments: error); ////Check error type.
-//  }
-//}

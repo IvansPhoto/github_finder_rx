@@ -1,44 +1,52 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+//import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:github_finder_rx/pages/WidgetSettingsPage.dart';
-import 'package:github_finder_rx/supportPages/LoadingScreen.dart';
+//import 'package:github_finder_rx/supportPages/LoadingScreen.dart';
 import 'package:github_finder_rx/pages/ChangePageNumber.dart';
 import 'package:github_finder_rx/services.dart';
 import 'package:github_finder_rx/widgets.dart';
 import 'package:github_finder_rx/apiClasses.dart';
 
-class ResultSearchPage extends StatelessWidget {
+class ResultSearchPageSlivers extends StatelessWidget {
   final _streamService = getIt.get<StreamService>();
   final _widgetTypes = getIt.get<WidgetTypes>();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('The Users have found'),
-        elevation: 0,
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => WidgetSettingPage(), fullscreenDialog: true)),
-          )
-        ],
-      ),
-      body: StreamBuilder(
-          stream: _streamService.streamGHUResponse$,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData)
-              return LoadingScreen();
-            else if (_streamService.currentGHUResponse.headerStatus != '200 OK')
-              return _ApiError(_streamService.currentGHUResponse);
-            else {
-              final List<GitHubUsers> gitHubUsers = snapshot.data.users;
-              if (!_widgetTypes.usersGridInsteadList)
-                return _GridViewUsers(gitHubUsers);
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          title: Text('The Users have found!'),
+          elevation: 0,
+          floating: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.settings),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => WidgetSettingPage(), fullscreenDialog: true)),
+            )
+          ],
+        ),
+        StreamBuilder(
+            stream: _streamService.streamGHUResponse$,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData)
+                return SliverList(
+                  delegate: SliverChildListDelegate.fixed([
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[Text('Loading')],
+                    ),
+                  ]),
+                );
+              else if (_streamService.currentGHUResponse.headerStatus != '200 OK')
+                return _ApiError(_streamService.currentGHUResponse);
               else
-                return _ListViewUsers(gitHubUsers);
-            }
-          }),
+                return !_widgetTypes.usersGridInsteadList ? _GridViewUsers(snapshot.data.users) : _ListViewUsers(snapshot.data.users);
+            }),
+//        _SearchingButton(),
+      ],
     );
   }
 }
@@ -97,36 +105,18 @@ class _GridViewUsers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          _SearchingButton(),
-          GridView.builder(
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-              itemCount: gitHubUsers.length,
-              itemBuilder: (BuildContext context, int index) {
-                if (gitHubUsers.length < 1) return Center(heightFactor: 10, child: Text('No users found', style: TextStyle(fontSize: 45)));
-                return GridTile(
-                  footer: Container(
-                    color: Color.fromRGBO(0, 0, 0, 0.25),
-                    padding: EdgeInsets.symmetric(vertical: 2),
-                    child: Center(child: Text(gitHubUsers[index].login, style: Theme.of(context).textTheme.display1)),
-                  ),
-                  child: FlatButton(
-                      padding: EdgeInsets.all(0),
-                      onPressed: () => Navigator.pushNamed(context, RouteNames.profile,
-                          arguments: {'url': gitHubUsers[index].url, 'avatarUrl': gitHubUsers[index].avatarUrl, 'login': gitHubUsers[index].login}),
-                      child: Hero(
-                        tag: gitHubUsers[index].avatarUrl,
-                        child: ImageUrlIndicator(url: gitHubUsers[index].avatarUrl),
-                      )),
-                );
-              }),
-          _SearchingButton(),
-        ],
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) => Container(
+          width: 100,
+          height: 100,
+          child: Hero(
+            tag: gitHubUsers[index].avatarUrl,
+            child: ImageUrlIndicator(url: gitHubUsers[index].avatarUrl),
+          ),
+        ),
+        childCount: gitHubUsers.length,
       ),
     );
   }

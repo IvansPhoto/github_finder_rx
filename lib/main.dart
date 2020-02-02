@@ -4,12 +4,14 @@ import 'package:github_finder_rx/supportPages/ErrorScreen.dart';
 import 'package:github_finder_rx/supportPages/LoadingScreen.dart';
 import 'package:github_finder_rx/pages/SearchingUsersPage.dart';
 import 'package:github_finder_rx/pages/ResultSearchPage.dart';
+//import 'package:github_finder_rx/pages/ResultSearchPageSlivers.dart';
 import 'package:github_finder_rx/pages/UserProfilePage.dart';
 import 'package:github_finder_rx/services.dart';
 import 'package:github_finder_rx/pages/ChangePageNumber.dart';
 
 void main() {
   getIt.registerLazySingleton<StreamService>(() => StreamService());
+  getIt.registerLazySingleton<WidgetTypes>(() => WidgetTypes());
   runApp(MaterialApp(
     initialRoute: RouteNames.index,
     routes: {
